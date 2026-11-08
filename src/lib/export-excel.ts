@@ -54,7 +54,7 @@ export async function exportExcel(s: State) {
       cols.forEach((c, i) => {
         const cell = tr.getCell(i + 1);
         const L = String.fromCharCode(65 + i);
-        if (totals.includes(c.key)) cell.value = { formula: `SUM(${L}5:${L}${4 + rows.length})` };
+        if (totals.includes(c.key)) cell.value = { formula: `SUM(${L}5:${L}${4 + rows.length})`, result: rows.reduce((a, r) => a + (Number(r[c.key]) || 0), 0) };
         cell.font = { name: "Arial", bold: true };
         cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: GOLD } };
         cell.border = { ...border, top: { style: "medium", color: { argb: EMERALD } } };
