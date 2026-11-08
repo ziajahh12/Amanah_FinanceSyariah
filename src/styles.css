@@ -31,6 +31,9 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-gold: var(--gold);
+  --color-google: #ffffff;
+  --color-google-border: #747775;
+  --color-google-foreground: #1f1f1f;
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);

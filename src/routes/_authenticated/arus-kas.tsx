@@ -6,7 +6,7 @@ import { RiskInsights } from "@/components/RiskInsights";
 import { applyTx } from "@/lib/business-risk";
 import { EXPENSE_CATS, INCOME_CATS, newId, rp, update, useFinance, type Tx } from "@/lib/finance";
 
-export const Route = createFileRoute("/arus-kas")({
+export const Route = createFileRoute("/_authenticated/arus-kas")({
   head: () => ({
     meta: [
       { title: "Arus Kas Syariah — Amanah" },

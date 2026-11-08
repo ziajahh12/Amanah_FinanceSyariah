@@ -57,10 +57,36 @@ const load = (): State => {
   try { const raw = localStorage.getItem(KEY); state = raw ? JSON.parse(raw) : seed(); } catch { state = seed(); }
   return state!;
 };
+let cloudUser: string | null = null;
+let saveTimer: ReturnType<typeof setTimeout> | undefined;
 export function update(fn: (s: State) => State) {
   state = fn(load());
   localStorage.setItem(KEY, JSON.stringify(state));
   subs.forEach((f) => f());
+  if (cloudUser) {
+    const uid = cloudUser, data = state;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async () => {
+      const { supabase } = await import("@/integrations/supabase/client");
+      await supabase.from("finance_states").upsert({ user_id: uid, data: data as never, updated_at: new Date().toISOString() });
+    }, 600);
+  }
+}
+/** Load this user's data from Lovable Cloud (or upload local data on first sign-in). */
+export async function connectCloud(userId: string) {
+  const { supabase } = await import("@/integrations/supabase/client");
+  cloudUser = userId;
+  const { data } = await supabase.from("finance_states").select("data").eq("user_id", userId).maybeSingle();
+  if (data?.data && Array.isArray((data.data as State).txs)) {
+    state = data.data as State;
+    localStorage.setItem(KEY, JSON.stringify(state));
+    subs.forEach((f) => f());
+  } else update((s) => s);
+}
+export function disconnectCloud() {
+  cloudUser = null;
+  state = null;
+  localStorage.removeItem(KEY);
 }
 export const resetDemo = () => update(() => seed());
 export const clearAll = () => update((s) => ({ txs: [], assets: [], liabilities: [], profile: s.profile }));

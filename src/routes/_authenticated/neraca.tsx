@@ -4,7 +4,7 @@ import { Trash2, Plus, HandCoins, Droplets } from "lucide-react";
 import { Card, PageTitle } from "@/components/AppShell";
 import { ASSET_TYPES, LIAB_TYPES, metrics, newId, rp, update, useFinance } from "@/lib/finance";
 
-export const Route = createFileRoute("/neraca")({
+export const Route = createFileRoute("/_authenticated/neraca")({
   head: () => ({
     meta: [
       { title: "Neraca & Zakat Mal — Amanah" },

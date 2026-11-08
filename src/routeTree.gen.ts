@@ -9,104 +9,153 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ArusKasRouteImport } from './routes/arus-kas'
-import { Route as NeracaRouteImport } from './routes/neraca'
-import { Route as RisikoRouteImport } from './routes/risiko'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedArusKasRouteImport } from './routes/_authenticated/arus-kas'
+import { Route as AuthenticatedNeracaRouteImport } from './routes/_authenticated/neraca'
+import { Route as AuthenticatedRisikoRouteImport } from './routes/_authenticated/risiko'
 
-const IndexRoute = IndexRouteImport.update({
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const ArusKasRoute = ArusKasRouteImport.update({
+const AuthenticatedArusKasRoute = AuthenticatedArusKasRouteImport.update({
   id: '/arus-kas',
   path: '/arus-kas',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const NeracaRoute = NeracaRouteImport.update({
+const AuthenticatedNeracaRoute = AuthenticatedNeracaRouteImport.update({
   id: '/neraca',
   path: '/neraca',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const RisikoRoute = RisikoRouteImport.update({
+const AuthenticatedRisikoRoute = AuthenticatedRisikoRouteImport.update({
   id: '/risiko',
   path: '/risiko',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/arus-kas': typeof ArusKasRoute
-  '/neraca': typeof NeracaRoute
-  '/risiko': typeof RisikoRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/auth': typeof AuthRoute
+  '/arus-kas': typeof AuthenticatedArusKasRoute
+  '/neraca': typeof AuthenticatedNeracaRoute
+  '/risiko': typeof AuthenticatedRisikoRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/arus-kas': typeof ArusKasRoute
-  '/neraca': typeof NeracaRoute
-  '/risiko': typeof RisikoRoute
+  '/auth': typeof AuthRoute
+  '/arus-kas': typeof AuthenticatedArusKasRoute
+  '/neraca': typeof AuthenticatedNeracaRoute
+  '/risiko': typeof AuthenticatedRisikoRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/arus-kas': typeof ArusKasRoute
-  '/neraca': typeof NeracaRoute
-  '/risiko': typeof RisikoRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/arus-kas': typeof AuthenticatedArusKasRoute
+  '/_authenticated/neraca': typeof AuthenticatedNeracaRoute
+  '/_authenticated/risiko': typeof AuthenticatedRisikoRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/arus-kas' | '/neraca' | '/risiko'
+  fullPaths: '/' | '/auth' | '/arus-kas' | '/neraca' | '/risiko'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/arus-kas' | '/neraca' | '/risiko'
-  id: '__root__' | '/' | '/arus-kas' | '/neraca' | '/risiko'
+  to: '/auth' | '/arus-kas' | '/neraca' | '/risiko' | '/'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/arus-kas'
+    | '/_authenticated/neraca'
+    | '/_authenticated/risiko'
+    | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ArusKasRoute: typeof ArusKasRoute
-  NeracaRoute: typeof NeracaRoute
-  RisikoRoute: typeof RisikoRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/arus-kas': {
-      id: '/arus-kas'
+    '/_authenticated/arus-kas': {
+      id: '/_authenticated/arus-kas'
       path: '/arus-kas'
       fullPath: '/arus-kas'
-      preLoaderRoute: typeof ArusKasRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedArusKasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/neraca': {
-      id: '/neraca'
+    '/_authenticated/neraca': {
+      id: '/_authenticated/neraca'
       path: '/neraca'
       fullPath: '/neraca'
-      preLoaderRoute: typeof NeracaRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedNeracaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/risiko': {
-      id: '/risiko'
+    '/_authenticated/risiko': {
+      id: '/_authenticated/risiko'
       path: '/risiko'
       fullPath: '/risiko'
-      preLoaderRoute: typeof RisikoRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedRisikoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedArusKasRoute: typeof AuthenticatedArusKasRoute
+  AuthenticatedNeracaRoute: typeof AuthenticatedNeracaRoute
+  AuthenticatedRisikoRoute: typeof AuthenticatedRisikoRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedArusKasRoute: AuthenticatedArusKasRoute,
+  AuthenticatedNeracaRoute: AuthenticatedNeracaRoute,
+  AuthenticatedRisikoRoute: AuthenticatedRisikoRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  ArusKasRoute: ArusKasRoute,
-  NeracaRoute: NeracaRoute,
-  RisikoRoute: RisikoRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

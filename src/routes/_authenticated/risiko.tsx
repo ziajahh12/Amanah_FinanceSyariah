@@ -4,7 +4,7 @@ import { Card, PageTitle } from "@/components/AppShell";
 import { RiskInsights } from "@/components/RiskInsights";
 import { metrics, riskLabel, rp, update, useFinance } from "@/lib/finance";
 
-export const Route = createFileRoute("/risiko")({
+export const Route = createFileRoute("/_authenticated/risiko")({
   head: () => ({
     meta: [
       { title: "Manajemen Risiko Keuangan Syariah — Amanah" },

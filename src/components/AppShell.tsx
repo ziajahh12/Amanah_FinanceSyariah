@@ -1,7 +1,9 @@
-import { Link, Outlet } from "@tanstack/react-router";
+import { Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { useState, type ReactNode } from "react";
-import { LayoutDashboard, ArrowLeftRight, Scale, ShieldAlert, Menu, X, Sparkles, Send, RotateCcw, Trash2, FileSpreadsheet, Printer } from "lucide-react";
-import { agentReply, metrics, PRESETS, resetDemo, clearAll, useFinance } from "@/lib/finance";
+import { LayoutDashboard, ArrowLeftRight, Scale, ShieldAlert, Menu, X, Sparkles, Send, RotateCcw, Trash2, LogOut, FileSpreadsheet, Printer } from "lucide-react";
+import { agentReply, metrics, PRESETS, resetDemo, clearAll, disconnectCloud, useFinance } from "@/lib/finance";
 import { exportExcel } from "@/lib/export-excel";
 
 const NAV = [
@@ -11,9 +13,18 @@ const NAV = [
   { to: "/risiko", label: "Manajemen Risiko", icon: ShieldAlert },
 ] as const;
 
-export function AppShell() {
+export function AppShell({ email }: { email: string }) {
   const [open, setOpen] = useState(false);
   const data = useFinance();
+  const navigate = useNavigate();
+  const qc = useQueryClient();
+  const signOut = async () => {
+    await qc.cancelQueries();
+    qc.clear();
+    disconnectCloud();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  };
   return (
     <div className="min-h-screen lg:flex">
       <aside className={`print:hidden fixed inset-y-0 left-0 z-40 w-64 bg-sidebar text-sidebar-foreground islamic-pattern transition-transform lg:static lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
@@ -37,7 +48,9 @@ export function AppShell() {
           <button onClick={() => exportExcel(data)} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm opacity-80 hover:bg-sidebar-accent hover:opacity-100"><FileSpreadsheet className="size-4" /> Unduh Excel</button>
           <button onClick={() => window.print()} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm opacity-80 hover:bg-sidebar-accent hover:opacity-100"><Printer className="size-4" /> Cetak / Simpan PDF</button>
         </div>
-        <div className="absolute bottom-6 left-6 space-y-2 text-xs">
+        <div className="absolute bottom-6 left-6 right-6 space-y-2 text-xs">
+          <div className="truncate opacity-60">{email}</div>
+          <button onClick={signOut} className="flex items-center gap-2 font-semibold hover:opacity-80"><LogOut className="size-3" /> Keluar</button>
           <button onClick={() => confirm("Hapus semua data dan mulai dengan data Anda sendiri?") && clearAll()} className="flex items-center gap-2 font-semibold text-gold hover:opacity-80">
             <Trash2 className="size-3" /> Mulai dari nol (data asli)
           </button>

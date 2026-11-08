@@ -4,7 +4,7 @@ import { Wallet, TrendingUp, ShieldCheck, Activity } from "lucide-react";
 import { Card, PageTitle } from "@/components/AppShell";
 import { metrics, riskLabel, rp, rpShort, useFinance } from "@/lib/finance";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
       { title: "Dashboard — Amanah Keuangan Syariah" },

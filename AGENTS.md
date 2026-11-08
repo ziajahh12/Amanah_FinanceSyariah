@@ -28,3 +28,5 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- App pages live under `src/routes/_authenticated/` (client-only gate, redirects to `/auth`); each user's finance state is one JSON row in `finance_states` synced from the in-memory store in `src/lib/finance.ts` — why: keeps the existing local store/calculations unchanged while data persists per user.
