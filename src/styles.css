@@ -90,3 +90,9 @@
   }
   h1, h2, h3 { font-family: var(--font-display); }
 }
+
+@media print {
+  @page { size: A4; margin: 12mm; }
+  * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .rounded-xl { break-inside: avoid; }
+}
