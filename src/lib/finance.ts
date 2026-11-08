@@ -160,23 +160,3 @@ export function agentReply(q: string, m: Metrics): string {
   out.push("\n_Simulasi edukatif, bukan fatwa. Konsultasikan dengan DPS/ustadz terpercaya._");
   return out.join("\n");
 }
-
-export async function exportExcel(s: State) {
-  const XLSX = await import("xlsx");
-  const m = metrics(s);
-  const wb = XLSX.utils.book_new();
-  const add = (name: string, rows: object[]) => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), name);
-  add("Ringkasan", [
-    { Item: "Total Aset", Nilai: m.totalAssets }, { Item: "Total Liabilitas", Nilai: m.totalLiab },
-    { Item: "Kekayaan Bersih", Nilai: m.networth }, { Item: "Surplus Bulan Ini", Nilai: m.surplus },
-    { Item: "Zakat Mal", Nilai: Math.round(m.zakat) }, { Item: "Dana Non-Halal Tertunda", Nilai: m.quarantine },
-    { Item: "DSR (%)", Nilai: +(m.dsr * 100).toFixed(1) }, { Item: "Dana Darurat (x biaya hidup)", Nilai: +m.efMonths.toFixed(1) },
-  ]);
-  add("Arus Kas", [...s.txs].sort((a, b) => a.date.localeCompare(b.date)).map((t) => ({
-    Tanggal: t.date, Jenis: t.type === "income" ? "Pemasukan" : "Pengeluaran", Kategori: t.category,
-    Jumlah: t.amount, Catatan: t.note, "Non-Halal": t.nonHalal ? "Ya" : "",
-  })));
-  add("Aset", s.assets.map((a) => ({ Nama: a.name, Jenis: a.type, Nilai: a.value, "Wajib Zakat": a.zakatable ? "Ya" : "Tidak" })));
-  add("Liabilitas", s.liabilities.map((l) => ({ Nama: l.name, Akad: l.type, "Sisa Utang": l.balance, "Cicilan/Bulan": l.monthly })));
-  XLSX.writeFile(wb, `laporan-keuangan-syariah-${new Date().toISOString().slice(0, 10)}.xlsx`);
-}

@@ -1,7 +1,8 @@
 import { Link, Outlet } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { LayoutDashboard, ArrowLeftRight, Scale, ShieldAlert, Menu, X, Sparkles, Send, RotateCcw, Trash2, FileSpreadsheet, Printer } from "lucide-react";
-import { agentReply, metrics, PRESETS, resetDemo, clearAll, exportExcel, useFinance } from "@/lib/finance";
+import { agentReply, metrics, PRESETS, resetDemo, clearAll, useFinance } from "@/lib/finance";
+import { exportExcel } from "@/lib/export-excel";
 
 const NAV = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
