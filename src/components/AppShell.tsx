@@ -1,7 +1,7 @@
 import { Link, Outlet } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { LayoutDashboard, ArrowLeftRight, Scale, ShieldAlert, Menu, X, Sparkles, Send, RotateCcw } from "lucide-react";
-import { agentReply, metrics, PRESETS, resetDemo, useFinance } from "@/lib/finance";
+import { LayoutDashboard, ArrowLeftRight, Scale, ShieldAlert, Menu, X, Sparkles, Send, RotateCcw, Trash2 } from "lucide-react";
+import { agentReply, metrics, PRESETS, resetDemo, clearAll, useFinance } from "@/lib/finance";
 
 const NAV = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -31,9 +31,14 @@ export function AppShell() {
             </Link>
           ))}
         </nav>
-        <button onClick={resetDemo} className="absolute bottom-6 left-6 flex items-center gap-2 text-xs opacity-60 hover:opacity-100">
-          <RotateCcw className="size-3" /> Reset data demo
-        </button>
+        <div className="absolute bottom-6 left-6 space-y-2 text-xs">
+          <button onClick={() => confirm("Hapus semua data dan mulai dengan data Anda sendiri?") && clearAll()} className="flex items-center gap-2 font-semibold text-gold hover:opacity-80">
+            <Trash2 className="size-3" /> Mulai dari nol (data asli)
+          </button>
+          <button onClick={() => confirm("Ganti semua data dengan data contoh?") && resetDemo()} className="flex items-center gap-2 opacity-60 hover:opacity-100">
+            <RotateCcw className="size-3" /> Muat data contoh
+          </button>
+        </div>
       </aside>
       {open && <div className="fixed inset-0 z-30 bg-foreground/40 lg:hidden" onClick={() => setOpen(false)} />}
       <main className="flex-1 min-w-0">

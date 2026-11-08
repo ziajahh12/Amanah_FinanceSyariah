@@ -63,6 +63,7 @@ export function update(fn: (s: State) => State) {
   subs.forEach((f) => f());
 }
 export const resetDemo = () => update(() => seed());
+export const clearAll = () => update((s) => ({ txs: [], assets: [], liabilities: [], profile: s.profile }));
 export const newId = uid;
 const SERVER = seed();
 export function useFinance(): State {
