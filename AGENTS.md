@@ -30,3 +30,4 @@ use the editor.
 <!-- LOVABLE:END -->
 
 - App pages live under `src/routes/_authenticated/` (client-only gate, redirects to `/auth`); each user's finance state is one JSON row in `finance_states` synced from the in-memory store in `src/lib/finance.ts` — why: keeps the existing local store/calculations unchanged while data persists per user.
+- Generative chat uses an authenticated server function and reads the caller's own finance row after saving the visible snapshot; send only derived summaries without record names, notes or account identifiers to the model, so answers use current data without exposing other accounts.
