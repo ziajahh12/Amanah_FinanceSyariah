@@ -103,7 +103,7 @@ export function metrics(s: State) {
   const installments = s.liabilities.reduce((a, x) => a + x.monthly, 0);
   const dsr = avgIncome ? installments / avgIncome : 0;
   const efMonths = livingAvg ? liquid / livingAvg : 0;
-  const efTarget = s.profile.family ? [6, 12] : [3, 6];
+  const efTarget: [number, number] = s.profile.family ? [6, 12] : [3, 6];
   const nisab = 85 * s.profile.goldPrice;
   const zakatable = s.assets.filter((a) => a.zakatable).reduce((a, x) => a + x.value, 0);
   const zakat = zakatable >= nisab ? zakatable * 0.025 : 0;
