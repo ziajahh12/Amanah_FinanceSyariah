@@ -21,7 +21,7 @@ export function AppShell({ email }: { email: string }) {
   const signOut = async () => {
     await qc.cancelQueries();
     qc.clear();
-    disconnectCloud();
+    await disconnectCloud();
     await supabase.auth.signOut();
     navigate({ to: "/auth", replace: true });
   };
