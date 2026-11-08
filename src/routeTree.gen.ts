@@ -10,33 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ArusKasRouteImport } from './routes/arus-kas'
+import { Route as NeracaRouteImport } from './routes/neraca'
+import { Route as RisikoRouteImport } from './routes/risiko'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArusKasRoute = ArusKasRouteImport.update({
+  id: '/arus-kas',
+  path: '/arus-kas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NeracaRoute = NeracaRouteImport.update({
+  id: '/neraca',
+  path: '/neraca',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RisikoRoute = RisikoRouteImport.update({
+  id: '/risiko',
+  path: '/risiko',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/arus-kas': typeof ArusKasRoute
+  '/neraca': typeof NeracaRoute
+  '/risiko': typeof RisikoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/arus-kas': typeof ArusKasRoute
+  '/neraca': typeof NeracaRoute
+  '/risiko': typeof RisikoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/arus-kas': typeof ArusKasRoute
+  '/neraca': typeof NeracaRoute
+  '/risiko': typeof RisikoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/arus-kas' | '/neraca' | '/risiko'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/arus-kas' | '/neraca' | '/risiko'
+  id: '__root__' | '/' | '/arus-kas' | '/neraca' | '/risiko'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArusKasRoute: typeof ArusKasRoute
+  NeracaRoute: typeof NeracaRoute
+  RisikoRoute: typeof RisikoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +78,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/arus-kas': {
+      id: '/arus-kas'
+      path: '/arus-kas'
+      fullPath: '/arus-kas'
+      preLoaderRoute: typeof ArusKasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/neraca': {
+      id: '/neraca'
+      path: '/neraca'
+      fullPath: '/neraca'
+      preLoaderRoute: typeof NeracaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/risiko': {
+      id: '/risiko'
+      path: '/risiko'
+      fullPath: '/risiko'
+      preLoaderRoute: typeof RisikoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArusKasRoute: ArusKasRoute,
+  NeracaRoute: NeracaRoute,
+  RisikoRoute: RisikoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
