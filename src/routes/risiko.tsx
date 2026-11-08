@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
 import { Card, PageTitle } from "@/components/AppShell";
+import { RiskInsights } from "@/components/RiskInsights";
 import { metrics, riskLabel, rp, update, useFinance } from "@/lib/finance";
 
 export const Route = createFileRoute("/risiko")({
@@ -66,6 +67,7 @@ function Risk() {
         <Meter label="Risiko Solvabilitas" value={m.solvencyRisk} hint={`Utang ${rp(m.totalLiab)} vs aset ${rp(m.totalAssets)}`} />
         <Meter label="Risiko Investasi" value={m.investmentRisk} hint="Porsi aset volatil (reksa dana saham syariah)" />
       </div>
+      <RiskInsights />
     </>
   );
 }

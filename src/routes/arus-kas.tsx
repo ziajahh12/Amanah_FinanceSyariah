@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Trash2, Plus } from "lucide-react";
 import { Card, PageTitle } from "@/components/AppShell";
+import { RiskInsights } from "@/components/RiskInsights";
+import { applyTx } from "@/lib/business-risk";
 import { EXPENSE_CATS, INCOME_CATS, newId, rp, update, useFinance, type Tx } from "@/lib/finance";
 
 export const Route = createFileRoute("/arus-kas")({
@@ -21,11 +23,13 @@ const field = "rounded-lg border bg-background px-3 py-2 text-sm outline-none fo
 function CashFlow() {
   const s = useFinance();
   const [f, setF] = useState<Omit<Tx, "id">>({ date: new Date().toISOString().slice(0, 10), type: "expense", category: EXPENSE_CATS[0], amount: 0, note: "", nonHalal: false });
+  const [saved, setSaved] = useState(false);
   const cats = f.type === "income" ? INCOME_CATS : EXPENSE_CATS;
   const add = (e: React.FormEvent) => {
     e.preventDefault();
     if (f.amount <= 0) return;
-    update((st) => ({ ...st, txs: [...st.txs, { ...f, id: newId() }] }));
+    update((st) => applyTx(st, { ...f, id: newId() }));
+    setSaved(true);
     setF({ ...f, amount: 0, note: "" });
   };
   const list = [...s.txs].sort((a, b) => b.date.localeCompare(a.date));
@@ -51,7 +55,9 @@ function CashFlow() {
             </label>
           )}
         </form>
+        {saved && <p className="mt-3 text-xs text-success">✓ Tersimpan — otomatis tercatat di Arus Kas dan Neraca (Kas{f.category === "Cicilan Akad" ? " & sisa utang akad" : ""}). Analisis risiko di bawah sudah diperbarui.</p>}
       </Card>
+      <RiskInsights />
       <Card className="mt-6 overflow-x-auto p-0">
         <table className="w-full text-sm">
           <thead className="bg-secondary text-left text-xs text-secondary-foreground">
@@ -67,7 +73,7 @@ function CashFlow() {
                 </td>
                 <td className="p-3 text-muted-foreground">{t.note}</td>
                 <td className={`p-3 text-right font-semibold whitespace-nowrap ${t.type === "income" ? "text-success" : "text-destructive"}`}>{t.type === "income" ? "+" : "−"}{rp(t.amount)}</td>
-                <td className="p-3"><button aria-label="Hapus" onClick={() => update((st) => ({ ...st, txs: st.txs.filter((x) => x.id !== t.id) }))}><Trash2 className="size-4 text-muted-foreground hover:text-destructive" /></button></td>
+                <td className="p-3"><button aria-label="Hapus" onClick={() => update((st) => applyTx(st, t, -1))}><Trash2 className="size-4 text-muted-foreground hover:text-destructive" /></button></td>
               </tr>
             ))}
           </tbody>
