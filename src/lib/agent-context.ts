@@ -19,7 +19,7 @@ export function buildAgentContext(raw: unknown) {
   const parsed = financeContextSchema.parse(raw);
   const state: State = {
     ...parsed,
-    txs: parsed.txs.map(t => ({ ...t, note: "" })),
+    txs: parsed.txs.map(t => ({ ...t, nonHalal: t.nonHalal ?? false, note: "" })),
     assets: parsed.assets.map(a => ({ ...a, name: "" })),
     liabilities: parsed.liabilities.map(l => ({ ...l, name: "" })),
   };

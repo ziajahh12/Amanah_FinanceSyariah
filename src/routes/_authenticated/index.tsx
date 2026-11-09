@@ -7,6 +7,8 @@ import { metrics, riskLabel, rp, rpShort, useFinance } from "@/lib/finance";
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Dashboard — Amanah Keuangan Syariah" },
       { name: "description", content: "Ringkasan kekayaan bersih, arus kas, kepatuhan syariah, dan risiko keuangan Anda." },
       { property: "og:title", content: "Dashboard — Amanah Keuangan Syariah" },

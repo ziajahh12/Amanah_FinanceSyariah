@@ -7,6 +7,8 @@ import "@lovable.dev/cloud-auth-js/styles.css";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Masuk — Amanah Keuangan Syariah" },
       { name: "description", content: "Masuk atau daftar untuk mengelola keuangan syariah Anda dengan aman." },
       { property: "og:title", content: "Masuk — Amanah Keuangan Syariah" },

@@ -7,6 +7,8 @@ import { metrics, riskLabel, rp, update, useFinance } from "@/lib/finance";
 export const Route = createFileRoute("/_authenticated/risiko")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Manajemen Risiko Keuangan Syariah — Amanah" },
       { name: "description", content: "Ukur dana darurat, rasio cicilan (DSR), serta risiko likuiditas, solvabilitas, dan investasi." },
       { property: "og:title", content: "Manajemen Risiko — Amanah" },

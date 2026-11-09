@@ -8,7 +8,7 @@ describe("AI account context", () => {
       assets: [{ id: "asset-id", name: "private bank", type: "Kas", value: 62000000, zakatable: true }],
       liabilities: [], profile: { family: false, goldPrice: 1350000 },
     });
-    expect(context.monthly[0].income).toBe(18000000);
+    expect(context.monthly[0]?.income).toBe(18000000);
     expect(context.summary.liquid).toBe(62000000);
     expect(JSON.stringify(context)).not.toMatch(/private employer|private bank|private-id|asset-id/);
   });

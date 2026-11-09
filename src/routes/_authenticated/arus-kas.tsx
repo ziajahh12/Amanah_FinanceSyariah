@@ -9,6 +9,8 @@ import { EXPENSE_CATS, INCOME_CATS, newId, rp, update, useFinance, type Tx } fro
 export const Route = createFileRoute("/_authenticated/arus-kas")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Arus Kas Syariah — Amanah" },
       { name: "description", content: "Catat pemasukan halal dan pengeluaran termasuk ZIS, cicilan akad, dan dana kebajikan." },
       { property: "og:title", content: "Arus Kas Syariah — Amanah" },

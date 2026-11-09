@@ -2,9 +2,10 @@ import { Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, type ReactNode } from "react";
-import { LayoutDashboard, ArrowLeftRight, Scale, ShieldAlert, Menu, X, Sparkles, Send, RotateCcw, Trash2, LogOut, FileSpreadsheet, Printer } from "lucide-react";
-import { agentReply, metrics, PRESETS, resetDemo, clearAll, disconnectCloud, useFinance } from "@/lib/finance";
+import { LayoutDashboard, ArrowLeftRight, Scale, ShieldAlert, Menu, X, RotateCcw, Trash2, LogOut, FileSpreadsheet, Printer } from "lucide-react";
+import { resetDemo, clearAll, disconnectCloud, useFinance } from "@/lib/finance";
 import { exportExcel } from "@/lib/export-excel";
+import { AgentWidget } from "./AgentWidget";
 
 const NAV = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -85,59 +86,3 @@ export function Card({ children, className = "" }: { children: ReactNode; classN
   return <div className={`rounded-xl border bg-card p-5 shadow-sm ${className}`}>{children}</div>;
 }
 
-function Rich({ text }: { text: string }) {
-  return (
-    <div className="space-y-1 whitespace-pre-wrap">
-      {text.split("\n").map((l, i) => (
-        <p key={i} dangerouslySetInnerHTML={{ __html: l.replace(/[<>]/g, "").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/_(.+?)_/g, "<i>$1</i>") }} />
-      ))}
-    </div>
-  );
-}
-
-function AgentWidget() {
-  const s = useFinance();
-  const [open, setOpen] = useState(false);
-  const [input, setInput] = useState("");
-  const [msgs, setMsgs] = useState<{ role: "user" | "ai"; text: string }[]>([
-    { role: "ai", text: "Assalamu'alaikum! Saya **Ustadz Financial AI Agent**. Pilih pertanyaan di bawah atau ketik sendiri." },
-  ]);
-  const ask = (q: string) => {
-    if (!q.trim()) return;
-    setMsgs((m) => [...m, { role: "user", text: q }, { role: "ai", text: agentReply(q, metrics(s)) }]);
-    setInput("");
-  };
-  return (
-    <>
-      <button onClick={() => setOpen(!open)} className="print:hidden fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg ring-2 ring-gold">
-        <Sparkles className="size-4 text-gold" /> Ustadz AI
-      </button>
-      {open && (
-        <div className="print:hidden fixed bottom-20 right-4 z-50 flex h-[70vh] w-[min(400px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border bg-card shadow-2xl">
-          <div className="bg-primary p-4 text-primary-foreground islamic-pattern">
-            <div className="font-display text-lg">Ustadz Financial AI Agent</div>
-            <div className="text-xs opacity-80">Analisis berbasis data keuangan Anda</div>
-          </div>
-          <div className="flex-1 space-y-3 overflow-y-auto p-4 text-sm">
-            {msgs.map((m, i) => (
-              <div key={i} className={`rounded-xl p-3 ${m.role === "user" ? "ml-8 bg-primary text-primary-foreground" : "mr-4 bg-secondary text-secondary-foreground"}`}>
-                <Rich text={m.text} />
-              </div>
-            ))}
-          </div>
-          <div className="space-y-2 border-t p-3">
-            <div className="flex flex-wrap gap-1.5">
-              {PRESETS.map((p) => (
-                <button key={p} onClick={() => ask(p)} className="rounded-full bg-accent px-2.5 py-1 text-xs text-accent-foreground hover:opacity-80">{p}</button>
-              ))}
-            </div>
-            <form onSubmit={(e) => { e.preventDefault(); ask(input); }} className="flex gap-2">
-              <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Tanya tentang keuangan Anda…" className="flex-1 rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring" />
-              <button className="rounded-lg bg-primary px-3 text-primary-foreground" aria-label="Kirim"><Send className="size-4" /></button>
-            </form>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}

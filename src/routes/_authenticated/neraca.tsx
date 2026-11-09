@@ -7,6 +7,8 @@ import { ASSET_TYPES, LIAB_TYPES, metrics, newId, rp, update, useFinance } from 
 export const Route = createFileRoute("/_authenticated/neraca")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Neraca & Zakat Mal — Amanah" },
       { name: "description", content: "Kelola aset, utang syariah, hitung Zakat Mal otomatis, dan lacak pembersihan dana non-halal." },
       { property: "og:title", content: "Neraca & Zakat Mal — Amanah" },
