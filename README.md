@@ -1,6 +1,6 @@
-*Amanah Finance Syariah*
+# Amanah Finance Syariah
 
-Aplikasi Keuangan Digital Berbasis Prinsip Syariah Islam
+## Aplikasi Keuangan Digital Berbasis Prinsip Syariah Islam
 
 Amanah Finance Syariah adalah aplikasi berbasis website yang dirancang untuk membantu pengguna mengelola keuangan secara lebih mudah, praktis, dan sesuai dengan prinsip syariah Islam.
 
