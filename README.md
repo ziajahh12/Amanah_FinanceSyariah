@@ -1,4 +1,4 @@
-🕌 Amanah Finance Syariah
+*Amanah Finance Syariah*
 
 Aplikasi Keuangan Digital Berbasis Prinsip Syariah Islam
 
@@ -28,51 +28,7 @@ Beberapa fitur yang dikembangkan dalam Amanah Finance Syariah:
 
 Ketersediaan fitur mengikuti versi aplikasi yang sedang berjalan.
 
-🛠️ Teknologi yang Digunakan
-
-Aplikasi ini dikembangkan menggunakan teknologi berikut:
-
-- TypeScript – Bahasa pemrograman.
-- React – Library pengembangan antarmuka.
-- Vite – Build tool dan development server.
-- Supabase – Backend dan database.
-- Tailwind CSS – Styling antarmuka.
-
-🚀 Instalasi dan Menjalankan Aplikasi
-
-Jika ingin menjalankan aplikasi di komputer sendiri, ikuti langkah berikut:
-
-1. Clone repository
-
-git clone https://github.com/ziajahh12/Amanah_FinanceSyariah.git
-
-2. Masuk ke folder proyek
-
-cd Amanah_FinanceSyariah
-
-3. Instal dependencies
-
-npm install
-
-4. Siapkan konfigurasi environment
-
-Buat file ".env" berdasarkan ".env.example" dan isi dengan konfigurasi Supabase milik sendiri.
-
-5. Jalankan aplikasi
-
-npm run dev
-
-Aplikasi dapat dibuka melalui alamat lokal yang ditampilkan oleh Vite.
-
-🔒 Keamanan Aplikasi
-
-Keamanan data menjadi salah satu perhatian dalam pengembangan Amanah Finance Syariah.
-
-- File ".env" tidak disertakan dalam repository publik.
-- API secret dan Supabase Service Role Key wajib dirahasiakan.
-- Row Level Security (RLS) digunakan untuk melindungi akses data database.
-- File konfigurasi rahasia dikecualikan melalui ".gitignore".
-- Jangan membagikan password atau kredensial pribadi kepada publik.
+---
 
 👩‍💻 Informasi Pengembang
 
@@ -80,9 +36,9 @@ Nama Proyek: Amanah Finance Syariah
 
 Platform: Website Application
 
-Pengembang: Ai Hera Marlina
+Pengembang: Muhammad Zidan
 
-Institusi: Universitas Pamulang
+Institusi: Universitas Islam Tazkia
 
 Program Studi: Pendidikan Guru Sekolah Dasar
 
