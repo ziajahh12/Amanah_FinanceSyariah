@@ -8,7 +8,7 @@ export const LIAB_TYPES = ["Murabahah", "Musyarakah", "Qardh Hasan"] as const;
 export type Tx = { id: string; date: string; type: "income" | "expense"; category: string; amount: number; note: string; nonHalal?: boolean };
 export type Asset = { id: string; name: string; type: string; value: number; zakatable: boolean };
 export type Liability = { id: string; name: string; type: string; balance: number; monthly: number };
-export type Profile = { family: boolean; goldPrice: number };
+export type Profile = { family: boolean; goldPrice: number; goldAuto?: boolean; goldUpdatedAt?: string };
 export type State = { txs: Tx[]; assets: Asset[]; liabilities: Liability[]; profile: Profile };
 
 const uid = () => Math.random().toString(36).slice(2, 10);

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Trash2, Plus, HandCoins, Droplets } from "lucide-react";
+import { Trash2, Plus, HandCoins, Droplets, RefreshCw } from "lucide-react";
+import { refreshGoldPrice } from "@/lib/gold-live";
 import { Card, PageTitle } from "@/components/AppShell";
 import { ASSET_TYPES, LIAB_TYPES, metrics, newId, rp, update, useFinance } from "@/lib/finance";
 
@@ -25,6 +26,16 @@ function BalanceSheet() {
   const m = metrics(s);
   const [a, setA] = useState({ name: "", type: ASSET_TYPES[0] as string, value: 0 });
   const [l, setL] = useState({ name: "", type: LIAB_TYPES[0] as string, balance: 0, monthly: 0 });
+  const [loading, setLoading] = useState(false);
+  const [goldError, setGoldError] = useState("");
+  const isLive = s.profile.goldAuto !== false && !!s.profile.goldUpdatedAt;
+  const updatedAt = s.profile.goldUpdatedAt ? new Date(s.profile.goldUpdatedAt).toLocaleString("id-ID", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "";
+  const switchToLive = async () => {
+    setLoading(true); setGoldError("");
+    const ok = await refreshGoldPrice(true).catch(() => false);
+    if (!ok) setGoldError("Harga real-time sedang tidak tersedia, coba lagi sebentar.");
+    setLoading(false);
+  };
 
   const cleanse = () => m.quarantine > 0 && update((st) => ({ ...st, txs: [...st.txs, { id: newId(), date: new Date().toISOString().slice(0, 10), type: "expense", category: "Dana Kebajikan", amount: m.quarantine, note: "Pembersihan dana non-halal" }] }));
   const payZakat = () => m.zakat > 0 && update((st) => ({ ...st, txs: [...st.txs, { id: newId(), date: new Date().toISOString().slice(0, 10), type: "expense", category: "ZIS", amount: Math.round(m.zakat), note: "Zakat Mal" }] }));
@@ -38,10 +49,22 @@ function BalanceSheet() {
           <div className="mt-2 text-sm opacity-80">Zakat Mal (2,5%)</div>
           <div className="text-3xl font-bold">{rp(m.zakat)}</div>
           <div className="mt-1 text-xs opacity-80">Harta wajib zakat {rp(m.zakatable)} · Nisab 85g emas {rp(m.nisab)}</div>
-          <div className="mt-3 flex items-center gap-2 text-xs">
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
             Harga emas/gram:
-            <input type="number" className="w-32 rounded bg-primary-foreground/15 px-2 py-1" value={s.profile.goldPrice} onChange={(e) => update((st) => ({ ...st, profile: { ...st.profile, goldPrice: +e.target.value } }))} />
+            <input type="number" aria-label="Harga emas per gram" className="w-32 rounded bg-primary-foreground/15 px-2 py-1" value={s.profile.goldPrice} onChange={(e) => update((st) => ({ ...st, profile: { ...st.profile, goldPrice: +e.target.value, goldAuto: false } }))} />
+            {isLive ? (
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary-foreground/15 px-2 py-0.5">
+                <span className="size-1.5 animate-pulse rounded-full bg-gold" />Real-time{updatedAt && ` · ${updatedAt}`}
+              </span>
+            ) : (
+              <span className="opacity-80">Manual</span>
+            )}
+            <button type="button" onClick={switchToLive} disabled={loading} className="inline-flex items-center gap-1 rounded bg-primary-foreground/15 px-2 py-1 disabled:opacity-50">
+              <RefreshCw className={`size-3 ${loading ? "animate-spin" : ""}`} />{isLive ? "Perbarui" : "Pakai harga real-time"}
+            </button>
           </div>
+          {goldError && <div className="mt-1 text-xs text-gold">{goldError}</div>}
+          <div className="mt-1 text-[11px] opacity-70">Harga emas dunia (spot) dikonversi ke Rupiah, diperbarui tiap 5 menit. Bisa sedikit berbeda dari harga jual toko emas.</div>
           <button onClick={payZakat} disabled={!m.zakat} className="mt-4 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-foreground disabled:opacity-50">Catat pembayaran zakat</button>
         </Card>
         <Card>
