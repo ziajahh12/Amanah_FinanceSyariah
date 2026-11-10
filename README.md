@@ -1,4 +1,4 @@
-# Pixel Perfect Replay
+# Amanah
 
 Implement exactly the screenshot and nothing else
 
