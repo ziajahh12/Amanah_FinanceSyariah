@@ -17,7 +17,7 @@ export const getLiveGoldPrice = createServerFn({ method: "GET" }).handler(async 
     const gold = (await goldRes.json()) as { price?: number; updatedAt?: string };
     const fx = (await fxRes.json()) as { rates?: Record<string, number> };
     const usdPerOunce = Number(gold.price);
-    const usdToIdr = Number(fx.rates?.IDR);
+    const usdToIdr = Number(fx.rates?.["IDR"]);
     return { ok: true, pricePerGram: idrPerGram(usdPerOunce, usdToIdr), usdPerOunce, usdToIdr, updatedAt: gold.updatedAt ?? new Date().toISOString() };
   } catch (e) {
     console.error("live gold price failed", e);
