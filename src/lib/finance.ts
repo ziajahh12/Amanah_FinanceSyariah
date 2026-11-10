@@ -126,6 +126,28 @@ export function monthly(txs: Tx[]) {
   }));
 }
 
+export type CashStatus = "Surplus" | "Defisit" | "Seimbang";
+export const cashStatus = (net: number): CashStatus => (net > 0 ? "Surplus" : net < 0 ? "Defisit" : "Seimbang");
+export type CashPeriod = { key: string; label: string; income: number; expense: number; net: number; status: CashStatus };
+
+/** Cash flow grouped per month ("YYYY-MM") or per year ("YYYY"), oldest first. */
+export function cashFlowBy(txs: Tx[], period: "month" | "year"): CashPeriod[] {
+  const map = new Map<string, { income: number; expense: number }>();
+  for (const t of txs) {
+    const k = t.date.slice(0, period === "month" ? 7 : 4);
+    const r = map.get(k) ?? { income: 0, expense: 0 };
+    r[t.type] += t.amount;
+    map.set(k, r);
+  }
+  return [...map.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([key, r]) => ({
+    key,
+    label: period === "month" ? new Date(key + "-01T00:00:00").toLocaleDateString("id-ID", { month: "long", year: "numeric" }) : `Tahun ${key}`,
+    ...r,
+    net: r.income - r.expense,
+    status: cashStatus(r.income - r.expense),
+  }));
+}
+
 export function metrics(s: State) {
   const months = monthly(s.txs);
   const n = Math.max(months.length, 1);

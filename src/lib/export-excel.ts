@@ -1,4 +1,4 @@
-import { metrics, type State } from "@/lib/finance";
+import { cashFlowBy, cashStatus, metrics, rp, type State } from "@/lib/finance";
 
 const RP = '"Rp" #,##0;[Red]("Rp" #,##0);"-"';
 const EMERALD = "FF0F5132";
@@ -89,6 +89,31 @@ export async function exportExcel(s: State) {
     in: t.type === "income" ? t.amount : null, out: t.type === "expense" ? t.amount : null,
     st: t.nonHalal ? "Non-Halal" : "Halal",
   })), ["in", "out"]).getColumn(2).numFmt = "dd/mm/yyyy";
+
+  // Rekap per bulan & per tahun, dengan keterangan Surplus/Defisit
+  const recap = (name: string, title: string, period: "month" | "year") => {
+    const rows = cashFlowBy(s.txs, period);
+    const w = sheet(name, title, [
+      { header: period === "month" ? "Bulan" : "Tahun", key: "p", width: 22 }, { header: "Pemasukan", key: "in", width: 20, money: true },
+      { header: "Pengeluaran", key: "out", width: 20, money: true }, { header: "Selisih", key: "net", width: 20, money: true },
+      { header: "Keterangan", key: "st", width: 14 },
+    ], rows.map((r) => ({ p: r.label, in: r.income, out: r.expense, net: r.net, st: r.status })), ["in", "out", "net"]);
+    const color = (st: string) => ({ argb: st === "Defisit" ? "FFB91C1C" : st === "Surplus" ? "FF15803D" : "FF6B7280" });
+    rows.forEach((r, i) => { const c = w.getCell(`E${5 + i}`); c.font = { name: "Arial", size: 10, bold: true, color: color(r.status) }; });
+    const net = rows.reduce((a, r) => a + r.net, 0);
+    const tr = 5 + rows.length;
+    const st = cashStatus(net);
+    const cell = w.getCell(`E${tr}`);
+    cell.value = { formula: `IF(D${tr}>0,"Surplus",IF(D${tr}<0,"Defisit","Seimbang"))`, result: st };
+    cell.font = { name: "Arial", bold: true, color: color(st) };
+    w.mergeCells(`A${tr + 2}:E${tr + 2}`);
+    const note = w.getCell(`A${tr + 2}`);
+    note.value = st === "Surplus" ? `Keterangan: Surplus ${rp(net)} — pemasukan lebih besar dari pengeluaran.`
+      : st === "Defisit" ? `Keterangan: Defisit ${rp(-net)} — pengeluaran melebihi pemasukan.` : "Keterangan: Pemasukan dan pengeluaran seimbang.";
+    note.font = { name: "Arial", size: 10, italic: true, bold: true, color: color(st) };
+  };
+  recap("Arus Kas Bulanan", "LAPORAN ARUS KAS BULANAN", "month");
+  recap("Arus Kas Tahunan", "LAPORAN ARUS KAS TAHUNAN", "year");
 
   sheet("Neraca - Aset", "DAFTAR ASET", [
     { header: "No", key: "no", width: 6 }, { header: "Nama Aset", key: "n", width: 32 }, { header: "Jenis", key: "t", width: 22 },

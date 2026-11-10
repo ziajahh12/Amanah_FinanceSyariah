@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Trash2, Plus } from "lucide-react";
 import { Card, PageTitle } from "@/components/AppShell";
 import { RiskInsights } from "@/components/RiskInsights";
+import { CashFlowPeriods } from "@/components/CashFlowPeriods";
 import { applyTx } from "@/lib/business-risk";
 import { EXPENSE_CATS, INCOME_CATS, newId, rp, update, useFinance, type Tx } from "@/lib/finance";
 
@@ -59,6 +60,7 @@ function CashFlow() {
         </form>
         {saved && <p className="mt-3 text-xs text-success">✓ Tersimpan — otomatis tercatat di Arus Kas dan Neraca (Kas{f.category === "Cicilan Akad" ? " & sisa utang akad" : ""}). Analisis risiko di bawah sudah diperbarui.</p>}
       </Card>
+      <CashFlowPeriods txs={s.txs} />
       <RiskInsights />
       <Card className="mt-6 overflow-x-auto p-0">
         <table className="w-full text-sm">
